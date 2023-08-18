@@ -18,13 +18,14 @@ func TraceMiddleware(c *gin.Context) {
 		traceID = uuid.New().String()
 	}
 
-	// Store the trace ID in the request context
-	ctx := context.WithValue(c.Request.Context(), "traceID", traceID)
-	c.Request = c.Request.WithContext(ctx)
-
 	// Create a new logger with the traceID ingested as correlationID
-	ctx1 := logger.New(c.Request.Context(), traceID)
-	c.Request = c.Request.WithContext(ctx1)
+	ctx := logger.New(c.Request.Context(), traceID)
+
+	// Store the trace ID in the request context
+	ctx = context.WithValue(c.Request.Context(), "traceID", traceID)
+
+	// Add context with logger instance back to request context
+	c.Request = c.Request.WithContext(ctx)
 
 	// Continue processing the request
 	c.Next()
