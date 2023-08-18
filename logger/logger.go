@@ -41,6 +41,7 @@ func FromContext(ctx context.Context) *slog.Logger {
 		return Logger
 	}
 
+	fmt.Println("value from context", ctx.Value(loggerKey))
 	if logger, ok := ctx.Value(loggerKey).(*slog.Logger); ok {
 		fmt.Println("got logger from context with loggerkey passed")
 		return logger
